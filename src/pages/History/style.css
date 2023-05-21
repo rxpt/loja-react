@@ -1,0 +1,13 @@
+.background {
+  background-color: #e3b601;
+  background-repeat: no-repeat;
+  background-image: url(https://i.imgur.com/UzNpqYN.png);
+  background-size: cover;
+  position: relative;
+}
+
+@media (max-width: 990px) {
+  .background {
+    background-image: none;
+  }
+}
