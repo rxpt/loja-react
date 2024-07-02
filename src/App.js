@@ -1,32 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 //Pages
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Item from "./pages/Item";
-import Team from "./pages/Team";
-import History from "./pages/History";
+import AboutUs from "./pages/AboutUs";
 import Error404 from "./pages/404";
 
 const routes = [
   {
     path: "/",
     element: <Home />,
-    position: ["brand"],
+    position: ["header", "brand"],
     title: "Início",
   },
   {
-    path: "/nossa-historia",
-    element: <History />,
+    path: "/quem-somos",
+    element: <AboutUs />,
     position: ["header"],
-    title: "Nossa história",
-  },
-  {
-    path: "/nosso-time",
-    element: <Team />,
-    position: ["header"],
-    title: "Nosso time",
+    title: "Quem somos",
   },
   {
     path: "/produtos",
@@ -35,8 +29,12 @@ const routes = [
     title: "Nossos produtos",
   },
   {
-    path: "/item/:id",
+    path: "/produto/:name/:sku",
     element: <Item />,
+  },
+  {
+    path: "*",
+    element: <Error404 />,
   },
 ];
 
@@ -50,9 +48,8 @@ function App() {
           .map((route, index) => (
             <Route {...route} key={index} />
           ))}
-        {/* Página de erro */}
-        <Route path="*" element={<Error404 />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }

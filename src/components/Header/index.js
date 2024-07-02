@@ -1,13 +1,22 @@
 import { Link } from "react-router-dom";
-import Container from "react-bootstrap/Container";
+import { Container, Button } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
+import { faShoppingBag } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useCart, useCartDispatch } from "../../contexts/CartContext";
+import Cart from "../Cart";
 
 function Header({ routes }) {
+  const {
+    state: { cartItems },
+  } = useCart();
+  const cartDispatch = useCartDispatch();
   const brandLink = routes.find((route) => route.position?.includes("brand"));
   const headerMenu = routes.filter((route) =>
     route.position?.includes("header")
   );
+  const totalItems = cartItems.length;
 
   return (
     <header>
@@ -26,7 +35,15 @@ function Header({ routes }) {
                   </Link>
                 ))}
             </Nav>
-            <Navbar.Text>Shop</Navbar.Text>
+            <Nav>
+              <Button
+                variant="secondary"
+                onClick={() => cartDispatch.setShowShoppingCart(true)}
+              >
+                <FontAwesomeIcon icon={faShoppingBag} /> {totalItems}
+              </Button>
+              <Cart />
+            </Nav>
           </Navbar.Collapse>
         </Container>
       </Navbar>
