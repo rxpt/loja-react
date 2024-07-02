@@ -33,7 +33,7 @@ const products = [
     shortDescription: "Anel deslumbrante e elegante",
     price: 79.99,
     discount: 15,
-    sizes: ["P", "M", "G"],
+    sizes: ["16", "18", "20"],
     image: "https://i.imgur.com/uVTFwYh.png",
     rating: 5,
     isNew: true,
