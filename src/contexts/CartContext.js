@@ -1,5 +1,13 @@
 import { createContext, useContext, useReducer } from "react";
 
+const actionTypes = {
+  ADD_TO_CART: "ADD_TO_CART",
+  REMOVE_FROM_CART: "REMOVE_FROM_CART",
+  UPDATE_QUANTITY: "UPDATE_QUANTITY",
+  CLEAR_CART: "CLEAR_CART",
+  SET_SHOW_SHOPPING_CART: "SET_SHOW_SHOPPING_CART",
+};
+
 const initialState = {
   cartItems: [],
   showShoppingCart: false,
@@ -18,40 +26,58 @@ const useCart = () => {
   return context;
 };
 
+const addProductToCart = (cartItems, product) => {
+  const existingItem = cartItems.find((item) => item.sku === product.sku);
+  if (existingItem) {
+    return cartItems.map((item) =>
+      item.sku === product.sku ? { ...item, quantity: item.quantity + 1 } : item
+    );
+  } else {
+    return [...cartItems, { ...product, quantity: 1 }];
+  }
+};
+
+const removeProductFromCart = (cartItems, sku) => {
+  return cartItems.filter((item) => item.sku !== sku);
+};
+
+const updateProductQuantity = (cartItems, sku, quantity) => {
+  const item = cartItems.find((item) => item.sku === sku);
+  if (item.quantity === 1 && quantity < 1) {
+    return removeProductFromCart(cartItems, sku);
+  }
+  return cartItems.map((item) =>
+    item.sku === sku ? { ...item, quantity } : item
+  );
+};
+
 function cartReducer(state, action) {
   switch (action.type) {
-    case "ADD_TO_CART":
-      const existingItem = state.cartItems.find(
-        (item) => item.sku === action.payload.sku
-      );
-      if (existingItem) {
-        return {
-          ...state,
-          cartItems: state.cartItems.map((item) =>
-            item.sku === action.payload.sku
-              ? { ...item, quantity: item.quantity + 1 }
-              : item
-          ),
-        };
-      } else {
-        return {
-          ...state,
-          cartItems: [...state.cartItems, { ...action.payload, quantity: 1 }],
-        };
-      }
-    case "REMOVE_FROM_CART":
+    case actionTypes.ADD_TO_CART:
       return {
         ...state,
-        cartItems: state.cartItems.filter(
-          (item) => item.sku !== action.payload
+        cartItems: addProductToCart(state.cartItems, action.payload),
+      };
+    case actionTypes.REMOVE_FROM_CART:
+      return {
+        ...state,
+        cartItems: removeProductFromCart(state.cartItems, action.payload),
+      };
+    case actionTypes.UPDATE_QUANTITY:
+      return {
+        ...state,
+        cartItems: updateProductQuantity(
+          state.cartItems,
+          action.payload.sku,
+          action.payload.quantity
         ),
       };
-    case "CLEAR_CART":
+    case actionTypes.CLEAR_CART:
       return {
         ...state,
         cartItems: [],
       };
-    case "SET_SHOW_SHOPPING_CART":
+    case actionTypes.SET_SHOW_SHOPPING_CART:
       return {
         ...state,
         showShoppingCart: action.payload,
@@ -62,11 +88,15 @@ function cartReducer(state, action) {
 }
 
 const cartDispatch = (dispatch) => ({
-  addToCart: (item) => dispatch({ type: "ADD_TO_CART", payload: item }),
-  removeFromCart: (sku) => dispatch({ type: "REMOVE_FROM_CART", payload: sku }),
-  clearCart: () => dispatch({ type: "CLEAR_CART" }),
-  setShowShoppingCart: (show) =>
-    dispatch({ type: "SET_SHOW_SHOPPING_CART", payload: show }),
+  addToCart: (product) =>
+    dispatch({ type: actionTypes.ADD_TO_CART, payload: product }),
+  updateQuantity: (sku, quantity) =>
+    dispatch({ type: actionTypes.UPDATE_QUANTITY, payload: { sku, quantity } }),
+  removeFromCart: (sku) =>
+    dispatch({ type: actionTypes.REMOVE_FROM_CART, payload: sku }),
+  clearCart: () => dispatch({ type: actionTypes.CLEAR_CART }),
+  setShowShoppingCart: (value) =>
+    dispatch({ type: actionTypes.SET_SHOW_SHOPPING_CART, payload: value }),
 });
 
 const useCartDispatch = () => {

@@ -5,7 +5,7 @@ import TeamMember from "../../components/TeamMember";
 import teamMembers from "../../data/teamMembers";
 import "./style.css";
 
-function History() {
+function AboutUs() {
   return (
     <main>
       <Container className="py-4 background" fluid>
@@ -56,4 +56,4 @@ function History() {
   );
 }
 
-export default History;
+export default AboutUs;

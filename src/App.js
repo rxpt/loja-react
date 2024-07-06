@@ -6,6 +6,7 @@ import Footer from "./components/Footer";
 import Home from "./pages/Home";
 import Shop from "./pages/Shop";
 import Item from "./pages/Item";
+import Checkout from "./pages/Checkout";
 import AboutUs from "./pages/AboutUs";
 import Error404 from "./pages/404";
 
@@ -31,6 +32,10 @@ const routes = [
   {
     path: "/produto/:name/:sku",
     element: <Item />,
+  },
+  {
+    path: "/checkout",
+    element: <Checkout />,
   },
   {
     path: "*",
